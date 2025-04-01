@@ -9,40 +9,59 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var message = ""
-    @State private var picName = ""
+    @State private var imageName = ""
+    @State var lastMessageNumber = -1
+    @State var lastImageNumber = -1
+    
     var body: some View {
         
         VStack {
-            Spacer()
-            
-            Image(systemName: "\(picName)")
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(.orange)
             
             Text(message)
                 .font(.largeTitle)
-                .fontWeight(.ultraLight)
-                .foregroundStyle(.black)
+                .fontWeight(.heavy)
+                .foregroundStyle(.red)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+                .frame(height: 100)
+                .animation(.easeInOut(duration: 0.15), value: imageName)
+            
+            Image(imageName)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .shadow(radius: 30)
+                .animation(.default, value: imageName)
             
             Spacer()
             
-                Button("Press Me!") {
-                    if message=="" || message=="You Are Awesome!" {
-                        message = "You Are Great!"
-                        picName = "hand.thumbsup"
-                    }else {
-                        message = "You Are Awesome!"
-                        picName = "sun.max.fill"
-                    }
+            Button("Show Message!") {
+                let messages = ["You are Awesome",
+                                "You are Great",
+                                "Be the Change You Want to See!",
+                                "Keep it Going!",
+                                "You can do this!",
+                                "When the Genius Bar Needs Help, they call You!"]
+                //Determine message
+                
+                var messageNumber=Int.random(in: 0...messages.count-1)
+                while messageNumber == lastMessageNumber {
+                    messageNumber=Int.random(in: 0...messages.count-1)
                 }
-                                
+                message = messages[messageNumber]
+                lastMessageNumber=messageNumber
+                
+                var imageNumber=Int.random(in: 0...9)
+                while imageNumber==lastImageNumber {
+                    imageNumber=Int.random(in: 0...9)
+                }
+                imageName="image\(imageNumber)"
+                lastImageNumber=imageNumber
+            }
             .buttonStyle(.borderedProminent)
             .font(.title2)
-            .tint(.orange)
         }
-            .padding()
-        
+        .padding()
     }
 }
 #Preview {
